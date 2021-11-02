@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Choreographer
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -34,7 +36,16 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.pokemons.observe(this, Observer {
             loadRecyclerView(it)
-        })
+
+
+
+
+        }
+
+        )
+
+
+
     }
 
     private fun loadRecyclerView(pokemons: List<Pokemon?>) {

@@ -2,8 +2,10 @@ package br.com.curtsian.pokedex.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import br.com.curtsian.pokedex.api.PokemonRepository
 import br.com.curtsian.pokedex.domain.Pokemon
+import kotlinx.coroutines.launch
 
 class PokemonViewModel : ViewModel() {
     var pokemons = MutableLiveData<List<Pokemon?>>()
@@ -12,6 +14,8 @@ class PokemonViewModel : ViewModel() {
         Thread(Runnable {
             loadPokemons()
         }).start()
+
+
     }
 
     private fun loadPokemons() {

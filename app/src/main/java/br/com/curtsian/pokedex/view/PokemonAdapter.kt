@@ -8,7 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.com.curtsian.pokedex.R
+import br.com.curtsian.pokedex.databinding.PokemonItemBinding
 import br.com.curtsian.pokedex.domain.Pokemon
+import br.com.curtsian.pokedex.util.gone
+import br.com.curtsian.pokedex.util.visible
 import com.bumptech.glide.Glide
 import java.util.*
 
@@ -17,7 +20,7 @@ class PokemonAdapter(
 ) : RecyclerView.Adapter<PokemonAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.pokemon_item, parent, false)
+        val view =  PokemonItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return ViewHolder(view)
     }
@@ -31,45 +34,49 @@ class PokemonAdapter(
         return items.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        @SuppressLint("SetTextI18n")
-        fun bindView(item: Pokemon?) = with(itemView) {
-            val ivPokemon = findViewById<ImageView>(R.id.IVpokemon)
-            val tvnumberPokemon = findViewById<TextView>(R.id.TVnumberPokemon)
-            val tvnamePokemon = findViewById<TextView>(R.id.TVnamePokemon)
-            val tvType1 = findViewById<TextView>(R.id.TVtype1)
-            val tvType2 = findViewById<TextView>(R.id.TVtype2)
+    inner class ViewHolder(
+        private val binding: PokemonItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-            item?.let{
+        fun bindView(item: Pokemon?) = with(binding) {
+            item?.let { pokemon ->
 
-                Glide.with(itemView.context).load(it.imageUrl).into(ivPokemon)
+                Glide.with(itemView.context).load(pokemon.imageUrl).into(ivPokemon)
 
+                TVnumberPokemon.text = POKEMON_NUMBER.format(item.formattedNumber)
 
-                tvnumberPokemon.text = "N° ${item.formattedNumber}"
-                tvnamePokemon.text = item.formattedName
-                tvType1.text = item.types[0].name.replaceFirstChar {
-                    if (it.isLowerCase()) it.titlecase(
-                        Locale.getDefault()
-                    ) else it.toString()
+                TVnamePokemon.text = item.formattedName
+
+                TVtype1.text = item.types[ZERO_VALUE].name.replaceFirstChar { name ->
+                    if (name.isLowerCase())
+                        name.titlecase(Locale.getDefault())
+                    else
+                        name.toString()
                 }
 
-                if (item.types.size > 1) {
-                    tvType2.visibility = View.VISIBLE
-                    tvType2.text = item.types[1].name.replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(
-                            Locale.getDefault()
-                        ) else it.toString()
-                    }
-
-                } else {
-                    tvType2.visibility = View.GONE
-                }
+                replaceFirstChar(item)
             }
-
-
         }
 
+        private fun replaceFirstChar(item: Pokemon) = with(binding) {
+            if (item.types.size > ONE_VALUE) {
+                TVtype2.visible()
+                TVtype2.text = item.types[ONE_VALUE].name.replaceFirstChar {
+                    if (it.isLowerCase())
+                        it.titlecase(Locale.getDefault())
+                    else
+                        it.toString()
+                }
+            } else {
+                TVtype2.gone()
+            }
+        }
+    }
 
+    companion object {
+        private const val POKEMON_NUMBER = "N° %s"
+        private const val ZERO_VALUE = 0
+        private const val ONE_VALUE = 1
     }
 
 

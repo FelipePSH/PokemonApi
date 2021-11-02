@@ -1,6 +1,5 @@
 package br.com.curtsian.pokedex.api.model
 
-import br.com.curtsian.pokedex.domain.Pokemon
 import br.com.curtsian.pokedex.domain.PokemonType
 
 data class PokemonsApiResult (
